@@ -42,6 +42,18 @@ for line in f:
     decoded_line = line.strip().decode("utf-8")
     socks5.append(decoded_line)
 f.close()
+with open('proxies.txt', 'w+') as f:
+    for i in proxies:
+        f.write("%s\n" % i)
+    f.close()
+with open('socks4.txt', 'w+') as f:
+    for i in socks4:
+        f.write("%s\n" % i)
+    f.close()
+with open('socks5.txt', 'w+') as f:
+    for i in socks5:
+        f.write("%s\n" % i)
+    f.close()
 working = []
 workingsocks4 = []
 workingsocks5 = []
@@ -78,17 +90,40 @@ async def checkhttp(ip):
     try:
         conn = aiohttp.TCPConnector(limit=0)
         session = aiohttp.ClientSession(connector=conn)
-        response = await session.get(url, proxy=ip, headers=headers, timeout=120)
-        out = await response.json()
+        response1 = await session.get(url, proxy=ip, headers=headers, timeout=240)
+    except:
+        pass
+    try:
+        out1 = await response1.json()
         working.append(prox)
-        newproxy = out['ipPort']
+        print(prox+' ---- tested working - http')
+        newproxy = out1['ipPort']
         newproxy = clean.sub('', newproxy)
         new.append(newproxy)
         proxies.append(newproxy)
         print(newproxy + ' ---- new - http')
+    except:
+        pass
+    try:
+        response2 = await session.get(urlsocks4, proxy=ip, headers=headers, timeout=240)
+        out2 = await response2.json()
+        newproxysocks4 = out2['ipPort']
+        newproxysocks4 = clean.sub('', newproxysocks4)
+        newsocks4.append(newproxysocks4)
+        socks4.append(newproxysocks4)
+        print(newproxysocks4 + ' ---- new - socks4')
+    except:
+        pass
+    try:
+        response3 = await session.get(urlsocks5, proxy=ip, headers=headers, timeout=240)
+        out3 = await response3.json()
+        newproxysocks5 = out3['ipPort']
+        newproxysocks5 = clean.sub('', newproxysocks5)
+        newsocks5.append(newproxysocks5)
+        socks5.append(newproxysocks5)
+        print(newproxysocks5 + ' ---- new - socks5')
         await session.close()
     except Exception as e:
-        proxies.remove(prox)
         await session.close()
     await session.close()
 async def checksocks4(ip):
@@ -97,17 +132,41 @@ async def checksocks4(ip):
     connector = ProxyConnector.from_url(ip, limit=0)
     try:
         session = aiohttp.ClientSession(connector = connector)
-        response = await session.get(urlsocks4, headers=headers, timeout=120)
-        out = await response.json()
+        response1 = await session.get(url, headers=headers, timeout=240)
+    except:
+        pass
+    try:
+        out1 = await response1.json()
         workingsocks4.append(prox)
-        newproxysocks4 = out['ipPort']
+        print(prox+' ---- tested working - socks4')
+        newproxy = out1['ipPort']
+        newproxy = clean.sub('', newproxy)
+        new.append(newproxy)
+        proxies.append(newproxy)
+        print(newproxy + ' ---- new - http')
+    except:
+        pass
+    try:
+        response2 = await session.get(urlsocks4, headers=headers, timeout=240)
+        out2 = await response2.json()
+        newproxysocks4 = out2['ipPort']
         newproxysocks4 = clean.sub('', newproxysocks4)
         newsocks4.append(newproxysocks4)
         socks4.append(newproxysocks4)
         print(newproxysocks4 + ' ---- new - socks4')
+    except:
+        pass
+    try:
+        response3 = await session.get(urlsocks5, headers=headers, timeout=240)
+        out3 = await response3.json()
+        newproxysocks5 = out3['ipPort']
+        newproxysocks5 = clean.sub('', newproxysocks5)
+        newsocks5.append(newproxysocks5)
+        socks5.append(newproxysocks5)
+        print(newproxysocks5 + ' ---- new - socks5')
         await session.close()
-    except Exception as e:
-        socks4.remove(prox)
+    except:
+        pass
         await session.close()
     await session.close()
 async def checksocks5(ip):
@@ -116,31 +175,56 @@ async def checksocks5(ip):
     connector = ProxyConnector.from_url(ip, limit=0)
     try:
         session = aiohttp.ClientSession(connector = connector)
-        response = await session.get(urlsocks5, headers=headers, timeout=120)
-        out = await response.json()
+        response1 = await session.get(url, headers=headers, timeout=60)
+    except:
+        pass
+    try:
+        out1 = await response1.json()
         workingsocks5.append(prox)
-        newproxysocks5 = out['ipPort']
+        print(prox+' ---- tested working - socks5')
+        newproxy = out1['ipPort']
+        newproxy = clean.sub('', newproxy)
+        new.append(newproxy)
+        proxies.append(newproxy)
+        print(newproxy + ' ---- new - http')
+    except:
+        pass
+    try:
+        response2 = await session.get(urlsocks4, headers=headers, timeout=60)
+        out2 = await response2.json()
+        newproxysocks4 = out2['ipPort']
+        newproxysocks4 = clean.sub('', newproxysocks4)
+        newsocks4.append(newproxysocks4)
+        socks4.append(newproxysocks4)
+        print(newproxysocks4 + ' ---- new - socks4')
+    except:
+        pass
+    try:
+        response3 = await session.get(urlsocks5, headers=headers, timeout=60)
+        out3 = await response3.json()
+        newproxysocks5 = out3['ipPort']
         newproxysocks5 = clean.sub('', newproxysocks5)
         newsocks5.append(newproxysocks5)
         socks5.append(newproxysocks5)
         print(newproxysocks5 + ' ---- new - socks5')
         await session.close()
-    except Exception as e:
-        socks5.remove(prox)
+    except:
         await session.close()
+        pass
     await session.close()
 tasks = []
-def main():
+loop = asyncio.get_event_loop()
+async def main():
     print('Creating Jobs')
-    loop = asyncio.get_event_loop()
     for item in proxies:
-        tasks.append(asyncio.ensure_future(checkhttp(item)))
+        tasks.append(loop.create_task(checkhttp(item)))
     for item in socks4:
-        tasks.append(asyncio.ensure_future(checksocks4(item)))
+        tasks.append(loop.create_task(checksocks4(item)))
     for item in socks5:
-        tasks.append(asyncio.ensure_future(checksocks5(item)))
-    loop.run_until_complete(asyncio.wait(tasks))
+        tasks.append(loop.create_task(checksocks5(item)))
     print('Jobs Created')
+    print('Connecting...')
+    await asyncio.wait(tasks)
 def writefiles():
     with open('proxies.txt', 'w+') as f:
         for i in proxies:
@@ -170,7 +254,7 @@ def writefiles():
 checkmore = 0
 print('Loaded')
 while checkmore != 1:
-        main()
+        loop.run_until_complete(main())
         working = [*{*working}]
         print(str(len(working)) + '  total working proxies')
         proxies = [*{*proxies}]
