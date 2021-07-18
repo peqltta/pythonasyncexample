@@ -7,4 +7,10 @@
 [Ss]cripts
 pyvenv.cfg
 .venv
+socks4.txt
+socks5.txt
+proxies.txt
+working.txt
+workingsocks4.txt
+workingsocks5.txt
 pip-selfcheck.json

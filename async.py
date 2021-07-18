@@ -90,7 +90,7 @@ async def checkhttp(ip):
     try:
         conn = aiohttp.TCPConnector(limit=0)
         session = aiohttp.ClientSession(connector=conn)
-        response1 = await session.get(url, proxy=ip, headers=headers, timeout=240)
+        response1 = await session.get(url, proxy=ip, headers=headers, timeout=60)
     except:
         pass
     try:
@@ -105,7 +105,7 @@ async def checkhttp(ip):
     except:
         pass
     try:
-        response2 = await session.get(urlsocks4, proxy=ip, headers=headers, timeout=240)
+        response2 = await session.get(urlsocks4, proxy=ip, headers=headers, timeout=60)
         out2 = await response2.json()
         newproxysocks4 = out2['ipPort']
         newproxysocks4 = clean.sub('', newproxysocks4)
@@ -115,7 +115,7 @@ async def checkhttp(ip):
     except:
         pass
     try:
-        response3 = await session.get(urlsocks5, proxy=ip, headers=headers, timeout=240)
+        response3 = await session.get(urlsocks5, proxy=ip, headers=headers, timeout=60)
         out3 = await response3.json()
         newproxysocks5 = out3['ipPort']
         newproxysocks5 = clean.sub('', newproxysocks5)
@@ -132,7 +132,7 @@ async def checksocks4(ip):
     connector = ProxyConnector.from_url(ip, limit=0)
     try:
         session = aiohttp.ClientSession(connector = connector)
-        response1 = await session.get(url, headers=headers, timeout=240)
+        response1 = await session.get(url, headers=headers, timeout=60)
     except:
         pass
     try:
@@ -147,7 +147,7 @@ async def checksocks4(ip):
     except:
         pass
     try:
-        response2 = await session.get(urlsocks4, headers=headers, timeout=240)
+        response2 = await session.get(urlsocks4, headers=headers, timeout=60)
         out2 = await response2.json()
         newproxysocks4 = out2['ipPort']
         newproxysocks4 = clean.sub('', newproxysocks4)
@@ -157,7 +157,7 @@ async def checksocks4(ip):
     except:
         pass
     try:
-        response3 = await session.get(urlsocks5, headers=headers, timeout=240)
+        response3 = await session.get(urlsocks5, headers=headers, timeout=60)
         out3 = await response3.json()
         newproxysocks5 = out3['ipPort']
         newproxysocks5 = clean.sub('', newproxysocks5)
