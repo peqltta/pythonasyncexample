@@ -27,7 +27,32 @@ url2socks5 = 'https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5
 proxies = []
 socks4 = []
 socks5 = []
-timeout = 50
+timeout = 240
+limit=0
+try:
+    f = open('proxies.txt','r+')
+    for line in f:
+        proxies.append(line.strip())
+    f.close()
+except:
+    f = open('proxies.txt', 'w+')
+    f.close()
+try:
+    f = open('socks4.txt','r+')
+    for line in f:
+        socks4.append(line.strip())
+    f.close()
+except:
+    f = open('socks4.txt', 'w+')
+    f.close()
+try:
+    f = open('socks5.txt','r+')
+    for line in f:
+        socks5.append(line.strip())
+    f.close()
+except:
+    f = open('socks5.txt', 'w+')
+    f.close()
 f = urllib.request.urlopen(url2)
 for line in f:
     decoded_line = line.strip().decode("utf-8")
@@ -89,7 +114,7 @@ async def checkhttp(ip):
     prox = ip
     ip = "http://" + ip
     try:
-        conn = aiohttp.TCPConnector(limit=0)
+        conn = aiohttp.TCPConnector(limit=limit)
         session = aiohttp.ClientSession(connector=conn)
         response1 = await session.get(url, proxy=ip, headers=headers, timeout=timeout)
     except:
@@ -98,8 +123,8 @@ async def checkhttp(ip):
         out1 = await response1.json()
         working.append(prox)
         print(prox+' ---- tested working - http')
-        newproxy = out1['ipPort']
-        newproxy = clean.sub('', newproxy)
+        newproxy = await out1['ipPort']
+        newproxy = await clean.sub('', newproxy)
         new.append(newproxy)
         proxies.append(newproxy)
         print(newproxy + ' ---- new - http')
@@ -130,7 +155,7 @@ async def checkhttp(ip):
 async def checksocks4(ip):
     prox = ip
     ip = "socks4://" + ip
-    connector = ProxyConnector.from_url(ip, limit=0)
+    connector = ProxyConnector.from_url(ip, limit=limit)
     try:
         session = aiohttp.ClientSession(connector = connector)
         response1 = await session.get(url, headers=headers, timeout=timeout)
@@ -140,8 +165,8 @@ async def checksocks4(ip):
         out1 = await response1.json()
         workingsocks4.append(prox)
         print(prox+' ---- tested working - socks4')
-        newproxy = out1['ipPort']
-        newproxy = clean.sub('', newproxy)
+        newproxy = await out1['ipPort']
+        newproxy = await clean.sub('', newproxy)
         new.append(newproxy)
         proxies.append(newproxy)
         print(newproxy + ' ---- new - http')
@@ -173,7 +198,7 @@ async def checksocks4(ip):
 async def checksocks5(ip):
     prox = ip
     ip = "socks5://" + ip
-    connector = ProxyConnector.from_url(ip, limit=0)
+    connector = ProxyConnector.from_url(ip, limit=limit)
     try:
         session = aiohttp.ClientSession(connector = connector)
         response1 = await session.get(url, headers=headers, timeout=timeout)
@@ -183,8 +208,8 @@ async def checksocks5(ip):
         out1 = await response1.json()
         workingsocks5.append(prox)
         print(prox+' ---- tested working - socks5')
-        newproxy = out1['ipPort']
-        newproxy = clean.sub('', newproxy)
+        newproxy = await out1['ipPort']
+        newproxy = await clean.sub('', newproxy)
         new.append(newproxy)
         proxies.append(newproxy)
         print(newproxy + ' ---- new - http')
