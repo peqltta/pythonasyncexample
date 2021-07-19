@@ -27,6 +27,7 @@ url2socks5 = 'https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5
 proxies = []
 socks4 = []
 socks5 = []
+timeout = 50
 f = urllib.request.urlopen(url2)
 for line in f:
     decoded_line = line.strip().decode("utf-8")
@@ -90,7 +91,7 @@ async def checkhttp(ip):
     try:
         conn = aiohttp.TCPConnector(limit=0)
         session = aiohttp.ClientSession(connector=conn)
-        response1 = await session.get(url, proxy=ip, headers=headers, timeout=60)
+        response1 = await session.get(url, proxy=ip, headers=headers, timeout=timeout)
     except:
         pass
     try:
@@ -105,7 +106,7 @@ async def checkhttp(ip):
     except:
         pass
     try:
-        response2 = await session.get(urlsocks4, proxy=ip, headers=headers, timeout=60)
+        response2 = await session.get(urlsocks4, proxy=ip, headers=headers, timeout=timeout)
         out2 = await response2.json()
         newproxysocks4 = out2['ipPort']
         newproxysocks4 = clean.sub('', newproxysocks4)
@@ -115,7 +116,7 @@ async def checkhttp(ip):
     except:
         pass
     try:
-        response3 = await session.get(urlsocks5, proxy=ip, headers=headers, timeout=60)
+        response3 = await session.get(urlsocks5, proxy=ip, headers=headers, timeout=timeout)
         out3 = await response3.json()
         newproxysocks5 = out3['ipPort']
         newproxysocks5 = clean.sub('', newproxysocks5)
@@ -132,7 +133,7 @@ async def checksocks4(ip):
     connector = ProxyConnector.from_url(ip, limit=0)
     try:
         session = aiohttp.ClientSession(connector = connector)
-        response1 = await session.get(url, headers=headers, timeout=60)
+        response1 = await session.get(url, headers=headers, timeout=timeout)
     except:
         pass
     try:
@@ -147,7 +148,7 @@ async def checksocks4(ip):
     except:
         pass
     try:
-        response2 = await session.get(urlsocks4, headers=headers, timeout=60)
+        response2 = await session.get(urlsocks4, headers=headers, timeout=timeout)
         out2 = await response2.json()
         newproxysocks4 = out2['ipPort']
         newproxysocks4 = clean.sub('', newproxysocks4)
@@ -157,7 +158,7 @@ async def checksocks4(ip):
     except:
         pass
     try:
-        response3 = await session.get(urlsocks5, headers=headers, timeout=60)
+        response3 = await session.get(urlsocks5, headers=headers, timeout=timeout)
         out3 = await response3.json()
         newproxysocks5 = out3['ipPort']
         newproxysocks5 = clean.sub('', newproxysocks5)
@@ -175,7 +176,7 @@ async def checksocks5(ip):
     connector = ProxyConnector.from_url(ip, limit=0)
     try:
         session = aiohttp.ClientSession(connector = connector)
-        response1 = await session.get(url, headers=headers, timeout=60)
+        response1 = await session.get(url, headers=headers, timeout=timeout)
     except:
         pass
     try:
@@ -190,7 +191,7 @@ async def checksocks5(ip):
     except:
         pass
     try:
-        response2 = await session.get(urlsocks4, headers=headers, timeout=60)
+        response2 = await session.get(urlsocks4, headers=headers, timeout=timeout)
         out2 = await response2.json()
         newproxysocks4 = out2['ipPort']
         newproxysocks4 = clean.sub('', newproxysocks4)
@@ -200,7 +201,7 @@ async def checksocks5(ip):
     except:
         pass
     try:
-        response3 = await session.get(urlsocks5, headers=headers, timeout=60)
+        response3 = await session.get(urlsocks5, headers=headers, timeout=timeout)
         out3 = await response3.json()
         newproxysocks5 = out3['ipPort']
         newproxysocks5 = clean.sub('', newproxysocks5)
@@ -224,7 +225,7 @@ async def main():
         tasks.append(loop.create_task(checksocks5(item)))
     print('Jobs Created')
     print('Connecting...')
-    await asyncio.wait(tasks)
+    await asyncio.gather(*tasks)
 def writefiles():
     with open('proxies.txt', 'w+') as f:
         for i in proxies:
@@ -256,7 +257,7 @@ print('Loaded')
 while checkmore != 1:
         loop.run_until_complete(main())
         working = [*{*working}]
-        print(str(len(working)) + '  total working proxies')
+        print(str(len(working)) + '  total working http')
         proxies = [*{*proxies}]
         workingsocks4 = [*{*workingsocks4}]
         print(str(len(workingsocks4)) + '  total working socks4')
