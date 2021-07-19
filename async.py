@@ -19,11 +19,11 @@ headers = {'accept': 'application/json',
 'user-agent': 'Mozilla/5.0 (Linux; Android 6.0.1; Moto G (4)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0'}
 clean = re.compile('<.*?>')
 url = 'http://gimmeproxy.com/api/getProxy?protocol=http'
-url2 = 'https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all'
+url2 = 'https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=5000&country=all&ssl=all&anonymity=all'
 urlsocks4 = 'http://gimmeproxy.com/api/getProxy?protocol=socks4'
-url2socks4 = 'https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks4&timeout=10000&country=all'
+url2socks4 = 'https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks4&timeout=5000&country=all'
 urlsocks5 = 'http://gimmeproxy.com/api/getProxy?protocol=socks5'
-url2socks5 = 'https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all'
+url2socks5 = 'https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=5000&country=all'
 proxies = []
 socks4 = []
 socks5 = []
